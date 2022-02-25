@@ -2929,10 +2929,6 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       up: {
         from: 1,
         to: 1
-      },
-      flapping: {
-        from: 0,
-        to: 1
       }
     }
   });
@@ -2961,7 +2957,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       pos(width() / 2, height() / 2 - 100)
     ]);
     add([
-      text("Press 'space' to start", { size: 24 }),
+      text("Press 'space' to start\n\nIn the game, press 'space' to fly", { size: 24 }),
       origin("center"),
       pos(center())
     ]);
@@ -3059,14 +3055,14 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     ;
     add([
       sprite("gm"),
-      text("Game Over!\nScore: " + score + "\nHigh Score: " + highScore, { size: 50 }),
+      text("GAME OVER\n\nScore: " + score + "\nHigh Score: " + highScore, { size: 50 }),
       origin("center"),
       pos(center())
     ]);
     add([
       text("Press 'space' to play again", { size: 24 }),
       origin("center"),
-      pos(width() / 2, height() / 2 + 120)
+      pos(width() / 2, height() / 2 + 155)
     ]);
     keyPress("space", () => {
       play("mystic");

@@ -1,5 +1,3 @@
-// Tutorial: https://www.youtube.com/watch?v=hgReGsh5xVU
-
 import kaboom from "kaboom";
 
 // initialize context
@@ -10,6 +8,8 @@ kaboom({
 });
 
 // load assets
+
+// splits a sprite sheet for the bird animation
 loadSprite("birdAnim", "sprites/birdAnim.png", {
     sliceX: 2,
     sliceY: 1,
@@ -22,12 +22,9 @@ loadSprite("birdAnim", "sprites/birdAnim.png", {
             from: 1,
             to: 1
         },
-        flapping: {
-            from: 0,
-            to: 1
-        },
     },
 })
+
 loadSprite("bg", "sprites/bg.png");
 loadSprite("pipe", "sprites/pipe.png");
 loadSprite("bird", "sprites/bird.png");
@@ -40,6 +37,7 @@ loadSound("bgmusic", "sounds/Tipple Chipper.wav");
 var highScore = 0;
 var img;
 
+// sets background music for the game
 const music = play("bgmusic", {
     volume: 0.6,
     loop: true
@@ -47,6 +45,7 @@ const music = play("bgmusic", {
 
 music.play()
 
+// creates the start screen
 scene("start", () => {
     add([
         sprite("bg", {width: width(), height: height()}), 
@@ -58,7 +57,7 @@ scene("start", () => {
         
     ])
     add([
-        text("Press 'space' to start", {size: 24}),
+        text("Press 'space' to start\n\nIn the game, press 'space' to fly", {size: 24}),
         origin("center"),
         pos(center())
     ])
@@ -77,6 +76,7 @@ scene("start", () => {
     });
 })
 
+// creates the game screen
 scene("game", () => {
 
     var score = 0;
@@ -84,7 +84,8 @@ scene("game", () => {
     add([
         sprite("bg", {width: width(), height: height()}), 
     ]);
-    
+
+    // handles the creation of the pipes
     function spawnPipes(){
         const pipeGap = 40 + rand(20, 70);
         const offset = rand(0, 100)
@@ -116,22 +117,23 @@ scene("game", () => {
     action("pipe", (pipe) => {
         pipe.move(-160, 0);
 
+        // handles the scoring
         if (pipe.passed == false && pipe.pos.x < player.pos.x) {
             play("score");
             pipe.passed = true;
             score++;
             scoreText.text = score;
         }
-        // debug.log(score);
     });
 
+    // displays the score in the top left corner
     const scoreText = add([
         pos(10, 10),
         text(score, {size: 50}),
         {z: 100}
     ]);
     
-    // add a character to screen
+    // creates the bird
     const player = add([
     	// list of components
     	sprite("birdAnim"),
@@ -141,7 +143,7 @@ scene("game", () => {
         "player",
     ]);
     
-    // collision with pipes
+    // collision with pipes ends the game
     player.onCollide("pipe", () => {
         img = screenshot();
         loadSprite("gm", img);
@@ -160,7 +162,7 @@ scene("game", () => {
         }
     });
     
-    // flap those wings
+    // flap those wings by pressing the space bar
     keyPress("space", () => {
         play("wooosh");
         player.play("up");
@@ -171,14 +173,16 @@ scene("game", () => {
     })
 });
 
+// game over scene
 scene("gameover", (score) => {
+    // sets new high score if needed
     if (score > highScore) {
         highScore = score;    
     };
     
     add([
         sprite("gm"),
-        text("Game Over!\n" +
+        text("GAME OVER\n\n" +
             "Score: " + score +
             "\nHigh Score: " + highScore, {size: 50}),
         origin("center"),
@@ -187,7 +191,7 @@ scene("gameover", (score) => {
         add([
         text("Press 'space' to play again", {size: 24}),
         origin("center"),
-        pos(width()/2, height()/2 + 120)
+        pos(width()/2, height()/2 + 155)
     ])
 
     keyPress("space", () => {
@@ -198,4 +202,5 @@ scene("gameover", (score) => {
     });
 });
 
+// launches the game
 go("start");
